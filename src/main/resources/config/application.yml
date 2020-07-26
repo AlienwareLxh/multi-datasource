@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: genius-multitenancy
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database: MYSQL
+    show-sql: true
+    properties:
+      hibernate.id.new_generator_mappings: true
+      hibernate.cache.use_second_level_cache: true
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: true
+      hibernate.multiTenancy: SCHEMA
+      hibernate.tenant_identifier_resolver: com.genius.framework.multitenancy.resolver.TenantIdentifierResolver
+      hibernate.multi_tenant_connection_provider: com.genius.framework.multitenancy.provider.MultiTenantConnectionProviderImpl
