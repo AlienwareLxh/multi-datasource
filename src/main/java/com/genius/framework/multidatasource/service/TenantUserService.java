@@ -2,15 +2,15 @@ package com.genius.framework.multidatasource.service;
 
 import com.genius.framework.multidatasource.entity.TenantUser;
 import com.genius.framework.multidatasource.repository.TenantUserRepository;
-import com.genius.framework.multitenancy.annotation.MultiTenancy;
+import com.genius.framework.multitenancy.annotation.MultiTenancyMethod;
+import com.genius.framework.multitenancy.annotation.MultiTenancyRepository;
+import com.genius.framework.multitenancy.annotation.MultiTenancyService;
 import com.genius.framework.multitenancy.event.TenantEvent;
 import com.genius.framework.multitenancy.provider.MultiTenantContextProvider;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @Service
 @Transactional
-@EnableAspectJAutoProxy(exposeProxy = true)
+@MultiTenancyService
 public class TenantUserService {
 
     @Autowired
@@ -42,7 +42,7 @@ public class TenantUserService {
         return tenantUserRepository.save(tenantUser);
     }
 
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @MultiTenancyMethod
     public List<TenantUser> findAllByTenantId(String tenantId){
         List<TenantUser> users = new ArrayList<>();
         TenantUserService tenantUserService = (TenantUserService) AopContext.currentProxy();
@@ -74,7 +74,7 @@ public class TenantUserService {
         return tenantUserRepository.findAll();
     }
 
-    @MultiTenancy
+    @MultiTenancyRepository
     @Transactional(readOnly = true)
     public List<TenantUser> findAllByAnnotation() {
 //        publisher.publishEvent(new TenantEvent(this));
